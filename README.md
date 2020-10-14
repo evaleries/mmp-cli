@@ -30,7 +30,7 @@ Or logging-out by running `php mmp logout`. This command will delete the `cookie
 
 #### Check Task / Assignments
 
-You can easily check the upcoming assignments/tasks by runing these commands below.
+You can easily check the upcoming assignments/tasks by running these commands below.
 
 - `php assign:list` - List of available tasks on current month.
 - `php assign:list --latest` - Update the upcoming assignments.
