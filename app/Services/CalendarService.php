@@ -10,6 +10,7 @@ use Illuminate\Console\Concerns\InteractsWithIO;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Symfony\Component\Translation\Exception\InvalidArgumentException;
 
 class CalendarService
@@ -37,6 +38,7 @@ class CalendarService
      */
     public function calendarPath()
     {
+        return Storage::path('responses/' . $this->calendarFile);
     }
 
     /**
@@ -51,6 +53,7 @@ class CalendarService
     public function lastUpdate()
     {
         return File::exists($this->calendarPath())
+        ? Carbon::createFromTimestamp(Storage::lastModified('responses/' . $this->calendarFile), config('app.timezone'))
             ->locale('id')
             ->diffForHumans()
         : null;
@@ -63,16 +66,22 @@ class CalendarService
      */
     public function update($month = null)
     {
-        $calendar = $this->client()->post($url, [
+        $url = $this->mmp_main . 'lib/ajax/service.php?info=core_calendar_get_calendar_monthly_view&sesskey=' . $this->getSesskey();
         $calendar = $this->client()->timeout(20)->post($url, [
             [
+                'index' => 0,
                 'methodname' => 'core_calendar_get_calendar_monthly_view',
+                'args' => [
+                    'year' => date('Y'),
+                    'month' => $month ?: date('m'),
+                    'courseid' => 1,
+                    'categoryid' => 0,
                     'includenavigation' => false,
+                    'mini' => true,
                 ],
             ],
         ]);
 
-        if (!preg_match('/Web service is not available/si', $calendar->body())) {
         if ($calendar->successful() && Str::contains($calendar->header('Content-Type'), 'application/json')) {
 
             $response = collect(json_decode($calendar->body(), true))->collapse();
@@ -84,7 +93,6 @@ class CalendarService
             $this->saveResponse($this->calendarFile, $calendar->body());
 
             return true;
-        } else {
         } elseif (preg_match('/Web service is not available/im', $calendar->body())) {
             (new LoginService())->withCredential(config('sister'))->execute();
 
@@ -107,6 +115,7 @@ class CalendarService
             throw new Exception('Please execute the update() / login first to fetch the calendar.');
         }
 
+        return collect(json_decode(Storage::get('responses/' . $this->calendarFile), true))
             ->collapse()
             ->pluck('weeks.*.days.*.events')
             ->collapse()
