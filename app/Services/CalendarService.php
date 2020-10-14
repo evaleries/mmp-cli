@@ -15,6 +15,7 @@ use Symfony\Component\Translation\Exception\InvalidArgumentException;
 class CalendarService
 {
     use AuthenticatedCookie;
+    use InteractsWithIO;
 
     /**
      * calendar result file name.
