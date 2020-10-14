@@ -1,0 +1,51 @@
+{
+    "name": "evaleries/mmp-unej-cli",
+    "description": "e-Learning (MMP) CLI-based application",
+    "keywords": ["mmp", "e-learning", "laravel", "laravel zero", "console", "cli"],
+    "type": "project",
+    "license": "MIT",
+    "support": {
+        "issues": "https://github.com/evaleries/mmp-cli/issues",
+        "source": "https://github.com/evaleries/mmp-cli"
+    },
+    "authors": [
+        {
+            "name": "evaleries",
+            "email": "182410102083@cs.unej.ac.id"
+        }
+    ],
+    "require": {
+        "php": "^7.3",
+        "guzzlehttp/guzzle": "^6.5.5",
+        "illuminate/http": "^8.0",
+        "intonate/tinker-zero": "^1.1",
+        "kub-at/php-simple-html-dom-parser": "^1.9",
+        "laravel-zero/framework": "^8.0",
+        "nunomaduro/laravel-console-dusk": "^1.8",
+        "nunomaduro/laravel-console-menu": "^3.1",
+        "nunomaduro/laravel-console-task": "^1.5"
+    },
+    "require-dev": {
+        "fzaninotto/faker": "^1.9",
+        "mockery/mockery": "^1.4.2",
+        "phpunit/phpunit": "^9.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "optimize-autoloader": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "bin": ["mmp"]
+}

@@ -1,0 +1,10 @@
+/vendor
+/.idea
+/.vscode
+/.vagrant
+.phpunit.result.cache
+.env
+/database/database.sqlite
+/storage/responses/*
+/storage/laravel-console-dusk/*
+/storage/cookies/*
