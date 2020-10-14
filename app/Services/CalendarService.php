@@ -83,7 +83,6 @@ class CalendarService
         ]);
 
         if ($calendar->successful() && Str::contains($calendar->header('Content-Type'), 'application/json')) {
-
             $response = collect(json_decode($calendar->body(), true))->collapse();
 
             if ($response->get('error')) {
