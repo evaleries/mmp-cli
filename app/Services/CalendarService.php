@@ -89,6 +89,7 @@ class CalendarService
 
                 if (str_contains($exceptionMessage, 'Web service is not available') || str_contains($exceptionMessage, 'expired')) {
                     (new LoginService())->withCredential(config('sister'))->execute();
+
                     return $this->update();
                 }
 
