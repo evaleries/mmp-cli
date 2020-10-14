@@ -1,5 +1,5 @@
 <p align="center">
-    <img title="MMP CLI" height="150" src="http://github.com/evaleries/mmp-cli/assets/logo.png?raw=true" />
+    <img title="MMP CLI" height="150" src="https://github.com/evaleries/mmp-cli/blob/master/assets/logo.png?raw=true" />
 </p>
 
 <h4> <center>This is an <bold>experimental project</bold>. </center></h4>
