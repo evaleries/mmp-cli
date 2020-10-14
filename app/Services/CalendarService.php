@@ -66,24 +66,23 @@ class CalendarService
      */
     public function update($month = null)
     {
-        $url = $this->mmp_main . 'lib/ajax/service.php?info=core_calendar_get_calendar_monthly_view&sesskey=' . $this->getSesskey();
+        $url = $this->mmp_main.'lib/ajax/service.php?info=core_calendar_get_calendar_monthly_view&sesskey='.$this->getSesskey();
         $calendar = $this->client()->timeout(20)->post($url, [
             [
-                'index' => 0,
+                'index'      => 0,
                 'methodname' => 'core_calendar_get_calendar_monthly_view',
                 'args' => [
-                    'year' => date('Y'),
-                    'month' => $month ?: date('m'),
-                    'courseid' => 1,
-                    'categoryid' => 0,
+                    'year'              => date('Y'),
+                    'month'             => $month ?: date('m'),
+                    'courseid'          => 1,
+                    'categoryid'        => 0,
                     'includenavigation' => false,
-                    'mini' => true,
+                    'mini'              => true,
                 ],
             ],
         ]);
 
         if ($calendar->successful() && Str::contains($calendar->header('Content-Type'), 'application/json')) {
-
             $response = collect(json_decode($calendar->body(), true))->collapse();
 
             if ($response->get('error')) {
@@ -115,7 +114,7 @@ class CalendarService
             throw new Exception('Please execute the update() / login first to fetch the calendar.');
         }
 
-        return collect(json_decode(Storage::get('responses/' . $this->calendarFile), true))
+        return collect(json_decode(Storage::get('responses/'.$this->calendarFile), true))
             ->collapse()
             ->pluck('weeks.*.days.*.events')
             ->collapse()
