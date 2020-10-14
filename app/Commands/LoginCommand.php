@@ -32,7 +32,7 @@ class LoginCommand extends Command
     {
         return [
             'Login SSO Sister via HTTP Client' => fn () => (new LoginService())->withCredential(config('sister'))->execute(),
-            'Getting calendar updates'         => fn ()         => (new CalendarService())->update(),
+            'Getting calendar updates'         => fn () => (new CalendarService())->update(),
         ];
     }
 
