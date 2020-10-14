@@ -38,7 +38,7 @@ class CalendarService
      */
     public function calendarPath()
     {
-        return Storage::path('responses/' . $this->calendarFile);
+        return Storage::path('responses/'.$this->calendarFile);
     }
 
     /**
@@ -53,7 +53,7 @@ class CalendarService
     public function lastUpdate()
     {
         return File::exists($this->calendarPath())
-        ? Carbon::createFromTimestamp(Storage::lastModified('responses/' . $this->calendarFile), config('app.timezone'))
+        ? Carbon::createFromTimestamp(Storage::lastModified('responses/'.$this->calendarFile), config('app.timezone'))
             ->locale('id')
             ->diffForHumans()
         : null;
@@ -71,7 +71,7 @@ class CalendarService
             [
                 'index'      => 0,
                 'methodname' => 'core_calendar_get_calendar_monthly_view',
-                'args' => [
+                'args'       => [
                     'year'              => date('Y'),
                     'month'             => $month ?: date('m'),
                     'courseid'          => 1,
@@ -83,6 +83,7 @@ class CalendarService
         ]);
 
         if ($calendar->successful() && Str::contains($calendar->header('Content-Type'), 'application/json')) {
+
             $response = collect(json_decode($calendar->body(), true))->collapse();
 
             if ($response->get('error')) {
