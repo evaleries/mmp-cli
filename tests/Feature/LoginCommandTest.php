@@ -9,7 +9,7 @@ class LoginCommandTest extends TestCase
 {
     protected function getCookieFullPath()
     {
-        return Storage::path('cookies/', md5(config('sister.nim')) . '.json');
+        return Storage::path('cookies/' . md5(config('sister.nim')) . '.json');
     }
 
     /**
