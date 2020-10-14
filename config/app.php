@@ -60,7 +60,7 @@ return [
     ],
 
     /**
-     * Timezone
+     * Timezone.
      */
     'timezone' => 'Asia/Jakarta',
 

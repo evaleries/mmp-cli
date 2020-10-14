@@ -9,11 +9,11 @@ class LoginCommandTest extends TestCase
 {
     protected function getCookieFullPath()
     {
-        return Storage::path('cookies/' . md5(config('sister.nim')) . '.json');
+        return Storage::path('cookies/'.md5(config('sister.nim')).'.json');
     }
 
     /**
-     * Test basic command for login
+     * Test basic command for login.
      *
      * @return void
      */
@@ -43,7 +43,5 @@ class LoginCommandTest extends TestCase
     public function testCookieFileIsReadable()
     {
         $this->assertFileIsReadable($this->getCookieFullPath());
-
     }
-
 }

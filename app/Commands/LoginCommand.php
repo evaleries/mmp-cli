@@ -31,8 +31,8 @@ class LoginCommand extends Command
     protected function tasks()
     {
         return [
-            'Login SSO Sister via HTTP Client' => fn() => (new LoginService)->withCredential(config('sister'))->execute(),
-            'Getting calendar updates' => fn() => (new CalendarService)->update(),
+            'Login SSO Sister via HTTP Client' => fn () => (new LoginService())->withCredential(config('sister'))->execute(),
+            'Getting calendar updates'         => fn ()         => (new CalendarService())->update(),
         ];
     }
 
@@ -60,7 +60,8 @@ class LoginCommand extends Command
     /**
      * Define the command's schedule.
      *
-     * @param  \Illuminate\Console\Scheduling\Schedule $schedule
+     * @param \Illuminate\Console\Scheduling\Schedule $schedule
+     *
      * @return void
      */
     public function schedule(Schedule $schedule): void
