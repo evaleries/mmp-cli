@@ -61,4 +61,4 @@ Feel free to open pull request on this repository.
 
 ## License
 
-MMP CLI is an open-source software licensed under the [MIT license](https://github.com/evaleries/mmp-client/blob/master/LICENSE.md).
+MMP CLI is an open-source software licensed under the [MIT license](https://github.com/evaleries/mmp-cli/blob/master/LICENSE.md).
