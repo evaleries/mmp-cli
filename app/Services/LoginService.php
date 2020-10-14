@@ -85,7 +85,7 @@ class LoginService
     {
         $executionToken = $this->extractTokenUsingRegex($response) ?: $this->extractTokenUsingHtmlParser($response);
 
-        if ($executionToken || strlen($executionToken) < 32) {
+        if (!$executionToken || strlen($executionToken) < 32) {
             throw new \Exception('Invalid execution token, given:'.$executionToken);
         }
 

@@ -10,7 +10,6 @@ use Illuminate\Console\Concerns\InteractsWithIO;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use Symfony\Component\Translation\Exception\InvalidArgumentException;
 
 class CalendarService
@@ -82,20 +81,24 @@ class CalendarService
             ],
         ]);
 
-        if ($calendar->successful() && Str::contains($calendar->header('Content-Type'), 'application/json')) {
+        if ($calendar->successful() && str_contains($calendar->header('Content-Type'), 'application/json')) {
             $response = collect(json_decode($calendar->body(), true))->collapse();
 
             if ($response->get('error')) {
+                $exceptionMessage = data_get($response, 'exception.message', 'Error were occured. Try re-login using php mmp login command');
+
+                if (str_contains($exceptionMessage, 'Web service is not available') || str_contains($exceptionMessage, 'expired')) {
+                    (new LoginService())->withCredential(config('sister'))->execute();
+
+                    return $this->update();
+                }
+
                 throw new \Exception(data_get($response, 'exception.message', 'Error occured! Try re-login using mmp login'));
             }
 
             $this->saveResponse($this->calendarFile, $calendar->body());
 
             return true;
-        } elseif (preg_match('/Web service is not available/im', $calendar->body())) {
-            (new LoginService())->withCredential(config('sister'))->execute();
-
-            return $this->update();
         }
 
         $calendar->throw();
