@@ -17,52 +17,53 @@ trait AuthenticatedCookie
     protected $mmp_main = 'https://mmp.unej.ac.id/';
 
     /**
-     * Retrieved sesskey
+     * Retrieved sesskey.
      *
      * @var string
      */
     private $sesskey;
 
     /**
-     * User Agent
+     * User Agent.
      *
      * @var string
      */
     private $userAgent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.75 Safari/537.36';
 
     /**
-     * Loaded cookies
+     * Loaded cookies.
      *
      * @var Collection
      */
     private $loadedCookies;
 
     /**
-     * Cookie filename
+     * Cookie filename.
      *
      * @var string
      */
     private $cookieFile;
 
     /**
-     * Save response to storage
+     * Save response to storage.
      *
      * @param string $name
      * @param string $response
+     *
      * @return void
      */
     public function saveResponse($name, $response)
     {
-        Storage::put('responses/' . $name, $response);
+        Storage::put('responses/'.$name, $response);
     }
 
     public function cookieFile()
     {
-        return 'cookies/' . md5(config('sister.nim')) . '.json';
+        return 'cookies/'.md5(config('sister.nim')).'.json';
     }
 
     /**
-     * Get the cookie path
+     * Get the cookie path.
      *
      * @return string
      */
@@ -72,9 +73,10 @@ trait AuthenticatedCookie
     }
 
     /**
-     * Save cookies from array
+     * Save cookies from array.
      *
      * @param array|CookieJar|null $cookies
+     *
      * @return int|bool
      */
     protected function saveCookies($cookies = null)
@@ -88,14 +90,14 @@ trait AuthenticatedCookie
         }
 
         if (!is_array($cookies)) {
-            throw new \InvalidArgumentException('Cookies is not an array, but ' . gettype($cookies) . ' given');
+            throw new \InvalidArgumentException('Cookies is not an array, but '.gettype($cookies).' given');
         }
 
         return Storage::put($this->cookieFile(), json_encode($cookies, JSON_PRETTY_PRINT));
     }
 
     /**
-     * Load cookies from file
+     * Load cookies from file.
      *
      * @return void
      */
@@ -109,7 +111,7 @@ trait AuthenticatedCookie
     }
 
     /**
-     * Cookie manager
+     * Cookie manager.
      *
      * @return FileCookieJar
      */
@@ -138,14 +140,15 @@ trait AuthenticatedCookie
     }
 
     /**
-     * Get sesskey from response
+     * Get sesskey from response.
      *
      * @param mixed $response
+     *
      * @return void
      */
     public function getSesskey($response = null)
     {
-        $response??=(Storage::has('responses/dashboard.html') ? Storage::get('responses/dashboard.html') : '');
+        $response ??= (Storage::has('responses/dashboard.html') ? Storage::get('responses/dashboard.html') : '');
 
         preg_match_all('/"sesskey":"(.*?)"/si', $response, $tokens);
 

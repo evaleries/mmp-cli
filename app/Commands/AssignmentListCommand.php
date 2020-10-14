@@ -24,13 +24,15 @@ class AssignmentListCommand extends Command
     protected $description = 'Daftar tugas';
 
     /**
-     * Calendar Service
+     * Calendar Service.
+     *
      * @var CalendarService
      */
     protected $calendarService;
 
     /**
-     * Assignment Service
+     * Assignment Service.
+     *
      * @var AssignmentService
      */
     protected $assignmentService;
@@ -50,18 +52,18 @@ class AssignmentListCommand extends Command
     public function handle()
     {
         if ($this->option('latest')) {
-            $this->task('Updating assignments', fn() => $this->calendarService->update());
+            $this->task('Updating assignments', fn () => $this->calendarService->update());
         }
 
         $month = now()->month;
         if ($this->option('custom')) {
             $month = $this->anticipate('Jadwal di bulan apa?', range(1, 12), now()->month);
-            $this->task('Updating assignments for ' . now()->setMonth($month)->monthName, fn() => $this->calendarService->update($month));
+            $this->task('Updating assignments for '.now()->setMonth($month)->monthName, fn () => $this->calendarService->update($month));
         }
 
-        $this->title('List Jadwal Tugas di Bulan ' . now()->setMonth($month)->locale('id')->monthName);
+        $this->title('List Jadwal Tugas di Bulan '.now()->setMonth($month)->locale('id')->monthName);
         if ($this->calendarService->lastUpdate()) {
-            $this->line('Terakhir diperbarui: ' . $this->calendarService->lastUpdate());
+            $this->line('Terakhir diperbarui: '.$this->calendarService->lastUpdate());
         }
 
         $this->table(['id', 'topic', 'description', 'due_date', 'when'], $this->assignmentService->tableRows());
@@ -71,7 +73,8 @@ class AssignmentListCommand extends Command
      * Get latest update for everyThreeHours()
      * Define the command's schedule.
      *
-     * @param  \Illuminate\Console\Scheduling\Schedule $schedule
+     * @param \Illuminate\Console\Scheduling\Schedule $schedule
+     *
      * @return void
      */
     public function schedule(Schedule $schedule): void

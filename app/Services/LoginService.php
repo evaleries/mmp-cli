@@ -17,12 +17,13 @@ class LoginService
     public function setService($service): LoginService
     {
         $this->service_url = $service;
+
         return $this;
     }
 
     public function getSSOServiceUrl(): string
     {
-        return $this->sso . '?service=' . urlencode(
+        return $this->sso.'?service='.urlencode(
             $this->service_url ?: $this->mmp
         );
     }
@@ -30,12 +31,14 @@ class LoginService
     public function setUsername($username): LoginService
     {
         $this->credentials['username'] = $username;
+
         return $this;
     }
 
     public function setPassword($password): LoginService
     {
         $this->credentials['password'] = $password;
+
         return $this;
     }
 
@@ -51,6 +54,7 @@ class LoginService
         }
 
         $this->credentials = $cred;
+
         return $this;
     }
 
@@ -64,14 +68,17 @@ class LoginService
     protected function extractTokenUsingHtmlParser($response)
     {
         $parser = HtmlDomParser::str_get_html($response);
+
         return $parser->find('input[type=hidden][name=execution]', 0)->value ?? null;
     }
 
     /**
-     * Extract execution token from login page
+     * Extract execution token from login page.
      *
      * @param string $response
+     *
      * @throws Exception
+     *
      * @return string
      */
     protected function extractExecutionToken(string $response): string
@@ -79,7 +86,7 @@ class LoginService
         $executionToken = $this->extractTokenUsingRegex($response) ?: $this->extractTokenUsingHtmlParser($response);
 
         if ($executionToken && strlen($executionToken) < 32) {
-            throw new \Exception('Invalid execution token, given:' . $executionToken);
+            throw new \Exception('Invalid execution token, given:'.$executionToken);
         }
 
         return $executionToken;
@@ -99,6 +106,7 @@ class LoginService
         if (Str::startsWith($loginPage->effectiveUri()->__toString(), $this->mmp_main)) {
             $this->saveCookies($loginPage->cookies());
             $this->saveResponse('dashboard.html', $loginPage->body());
+
             return true;
         }
 
@@ -110,9 +118,9 @@ class LoginService
             ->withoutVerifying()
             ->asForm()
             ->post($url, $this->credentials + [
-                'submit' => 'LOGIN',
-                '_eventId' => 'submit',
-                'execution' => $this->extractExecutionToken($loginPage->body()),
+                'submit'      => 'LOGIN',
+                '_eventId'    => 'submit',
+                'execution'   => $this->extractExecutionToken($loginPage->body()),
                 'geolocation' => '',
             ]);
 
@@ -123,6 +131,7 @@ class LoginService
         if (!preg_match('/Invalid credentials/mi', $submitLogin->body())) {
             $this->saveCookies($submitLogin->cookies());
             $this->saveResponse('dashboard.html', $submitLogin->body());
+
             return true;
         }
 

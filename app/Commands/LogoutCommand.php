@@ -38,6 +38,7 @@ class LogoutCommand extends Command
         foreach ($directories as $directory) {
             $this->task("Cleaning the {$directory} folder", function () use ($directory) {
                 $fullPath = Storage::path($directory);
+
                 return File::isDirectory($fullPath)
                     && File::cleanDirectory($fullPath)
                     && File::deleteDirectory($fullPath);
@@ -50,7 +51,8 @@ class LogoutCommand extends Command
     /**
      * Define the command's schedule.
      *
-     * @param  \Illuminate\Console\Scheduling\Schedule $schedule
+     * @param \Illuminate\Console\Scheduling\Schedule $schedule
+     *
      * @return void
      */
     public function schedule(Schedule $schedule): void

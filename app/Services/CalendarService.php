@@ -14,7 +14,8 @@ use Symfony\Component\Translation\Exception\InvalidArgumentException;
 
 class CalendarService
 {
-    use AuthenticatedCookie, InteractsWithIO;
+    use AuthenticatedCookie;
+    use InteractsWithIO;
 
     /**
      * calendar result file name.
@@ -30,27 +31,28 @@ class CalendarService
     }
 
     /**
-     * Get calendar full path
+     * Get calendar full path.
      *
      * @return string
      */
     public function calendarPath()
     {
-        return Storage::path('responses/' . $this->calendarFile);
+        return Storage::path('responses/'.$this->calendarFile);
     }
 
     /**
-     * Get a human-friendly version of file last changed timestamp
+     * Get a human-friendly version of file last changed timestamp.
      *
-     * @return string|null
      * @throws NotLocaleAwareException
      * @throws InvalidArgumentException
      * @throws Exception
+     *
+     * @return string|null
      */
     public function lastUpdate()
     {
         return File::exists($this->calendarPath())
-        ? Carbon::createFromTimestamp(Storage::lastModified('responses/' . $this->calendarFile), config('app.timezone'))
+        ? Carbon::createFromTimestamp(Storage::lastModified('responses/'.$this->calendarFile), config('app.timezone'))
             ->locale('id')
             ->diffForHumans()
         : null;
@@ -63,27 +65,29 @@ class CalendarService
      */
     public function update($month = null)
     {
-        $url = $this->mmp_main . 'lib/ajax/service.php?info=core_calendar_get_calendar_monthly_view&sesskey=' . $this->getSesskey();
+        $url = $this->mmp_main.'lib/ajax/service.php?info=core_calendar_get_calendar_monthly_view&sesskey='.$this->getSesskey();
         $calendar = $this->client()->post($url, [
             [
-                'index' => 0,
-                'methodname' => "core_calendar_get_calendar_monthly_view",
-                'args' => [
-                    'year' => date('Y'),
-                    'month' => $month ?: date('m'),
-                    'courseid' => 1,
-                    'categoryid' => 0,
+                'index'      => 0,
+                'methodname' => 'core_calendar_get_calendar_monthly_view',
+                'args'       => [
+                    'year'              => date('Y'),
+                    'month'             => $month ?: date('m'),
+                    'courseid'          => 1,
+                    'categoryid'        => 0,
                     'includenavigation' => false,
-                    'mini' => true,
+                    'mini'              => true,
                 ],
             ],
         ]);
 
         if (!preg_match('/Web service is not available/si', $calendar->body())) {
             $this->saveResponse($this->calendarFile, $calendar->body());
+
             return true;
         } else {
-            (new LoginService)->withCredential(config('sister'))->execute();
+            (new LoginService())->withCredential(config('sister'))->execute();
+
             return $this->update();
         }
 
@@ -91,7 +95,7 @@ class CalendarService
     }
 
     /**
-     * Get upcoming
+     * Get upcoming.
      *
      * @return Collection
      */
@@ -101,7 +105,7 @@ class CalendarService
             throw new Exception('Please execute the update() / login first to fetch the calendar.');
         }
 
-        return collect(json_decode(Storage::get('responses/' . $this->calendarFile), true))
+        return collect(json_decode(Storage::get('responses/'.$this->calendarFile), true))
             ->collapse()
             ->pluck('weeks.*.days.*.events')
             ->collapse()
@@ -110,10 +114,12 @@ class CalendarService
     }
 
     /**
-     * Helper for timestamp
+     * Helper for timestamp.
+     *
      * @todo Refactor to helper
      *
      * @param string|int $timestamp
+     *
      * @return Carbon
      */
     public function formatTimestamp($timestamp): Carbon

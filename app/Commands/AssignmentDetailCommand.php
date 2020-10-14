@@ -40,17 +40,18 @@ class AssignmentDetailCommand extends Command
         }
 
         $due = $assignmentService->formatTimestamp($matkul->get('timestart'));
-        $this->line("Mata Kuliah:\t" . data_get($matkul, 'course.fullname'));
-        $this->line("URL:\t\t" . $matkul->get('url'));
-        $this->line("Due Date:\t" . $due->format('D F Y H:i A'));
-        $this->line("When:\t\t" . $due->diffForHumans());
-        $this->line("Description: \n" . strip_tags($matkul->get('description')));
+        $this->line("Mata Kuliah:\t".data_get($matkul, 'course.fullname'));
+        $this->line("URL:\t\t".$matkul->get('url'));
+        $this->line("Due Date:\t".$due->format('D F Y H:i A'));
+        $this->line("When:\t\t".$due->diffForHumans());
+        $this->line("Description: \n".strip_tags($matkul->get('description')));
     }
 
     /**
      * Define the command's schedule.
      *
-     * @param  \Illuminate\Console\Scheduling\Schedule $schedule
+     * @param \Illuminate\Console\Scheduling\Schedule $schedule
+     *
      * @return void
      */
     public function schedule(Schedule $schedule): void
