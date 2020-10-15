@@ -2,6 +2,11 @@
     <img title="MMP CLI" height="150" src="https://github.com/evaleries/mmp-cli/blob/master/assets/logo.png?raw=true" />
 </p>
 
+<p align="center">
+    <a href="https://github.styleci.io/repos/303184310?branch=master"><img src="https://github.styleci.io/repos/303184310/shield?branch=master" alt="StyleCI"></a>
+    <a href="https://www.codacy.com/gh/evaleries/mmp-cli/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=evaleries/mmp-cli&amp;utm_campaign=Badge_Grade"><img src="https://img.shields.io/codacy/grade/48f2da43d1504cce89e37b7783af953b?style=flat-square"/></a>
+</p>
+
 <h4> <center>This is an <bold>experimental project</bold>. </center></h4>
 
 MMP CLI was created by, and is maintained by [evaleries](https://github.com/evaleries). This tool is a Moodle cli-based application that provides simple information directly taken from [MMP UNEJ](https://mmp.unej.ac.id/).
