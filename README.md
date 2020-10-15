@@ -2,16 +2,23 @@
     <img title="MMP CLI" height="150" src="https://github.com/evaleries/mmp-cli/blob/master/assets/logo.png?raw=true" />
 </p>
 
+<p align="center">
+    <a href="https://github.styleci.io/repos/303184310?branch=master"><img src="https://github.styleci.io/repos/303184310/shield?branch=master" alt="StyleCI"></a>
+    <a href="https://www.codacy.com/gh/evaleries/mmp-cli/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=evaleries/mmp-cli&amp;utm_campaign=Badge_Grade"><img src="https://img.shields.io/codacy/grade/48f2da43d1504cce89e37b7783af953b?style=flat-square"/></a>
+</p>
+
 <h4> <center>This is an <bold>experimental project</bold>. </center></h4>
 
 MMP CLI was created by, and is maintained by [evaleries](https://github.com/evaleries). This tool is a Moodle cli-based application that provides simple information directly taken from [MMP UNEJ](https://mmp.unej.ac.id/).
 
-- Built on top of the [Laravel Zero](https://laravel-zero.com) components.
-------
+-   Built on top of the [Laravel Zero](https://laravel-zero.com) components.
+
+* * *
 
 ## Usage
 
 ### Setup
+
 First of all, set up your NIM & Password in `.env` correctly.
 
 Run `composer install` command.
@@ -32,19 +39,18 @@ Or logging-out by running `php mmp logout`. This command will delete the `cookie
 
 You can easily check the upcoming assignments/tasks by running these commands below.
 
-- `php assign:list` - List of available tasks on current month.
-- `php assign:list --latest` - Update the upcoming assignments.
-- `php assign:list --custom` - Custom month.
-- `php assign:detail` - Interactively see the detail of assignment.
+-   `php assign:list` - List of available tasks on current month.
+-   `php assign:list --latest` - Update the upcoming assignments.
+-   `php assign:list --custom` - Custom month.
+-   `php assign:detail` - Interactively see the detail of assignment.
 
 #### Check Attendances
 
 You can easily check the upcoming attendaces by running these commands below.
 
-- `php mmp attend:list` - List of attendances on current month
-- `php mmp attend:list --latest` - Update the upcoming attendances
-- `php mmp attend:list --custom` - Custom month.
-
+-   `php mmp attend:list` - List of attendances on current month
+-   `php mmp attend:list --latest` - Update the upcoming attendances
+-   `php mmp attend:list --custom` - Custom month.
 
 #### Help
 
@@ -52,7 +58,7 @@ If you need help with the command, pass `help` on the first argument before the 
 
 e.g: `php mmp help assign:list`
 
----
+* * *
 
 ## Contribute
 
