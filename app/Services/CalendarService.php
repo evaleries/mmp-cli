@@ -6,7 +6,6 @@ use App\Traits\AuthenticatedCookie;
 use Carbon\Carbon;
 use Carbon\Exceptions\NotLocaleAwareException;
 use Exception;
-use Illuminate\Console\Concerns\InteractsWithIO;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
@@ -15,7 +14,6 @@ use Symfony\Component\Translation\Exception\InvalidArgumentException;
 class CalendarService
 {
     use AuthenticatedCookie;
-    use InteractsWithIO;
 
     /**
      * calendar result file name.
@@ -24,10 +22,17 @@ class CalendarService
      */
     protected $calendarFile;
 
+    /**
+     * Customize month or use current month.
+     *
+     * @var int
+     */
+    protected $customMonth;
+
     public function __construct()
     {
         $this->calendarFile = 'calendar-monthly.json';
-        $this->output = resolve('console.output');
+        $this->customMonth = date('m');
     }
 
     /**
@@ -59,11 +64,25 @@ class CalendarService
     }
 
     /**
+     * Customize month for update the calendar.
+     *
+     * @param int $customMonth
+     *
+     * @return CalendarService
+     */
+    public function month($customMonth): CalendarService
+    {
+        $this->customMonth = $customMonth;
+
+        return $this;
+    }
+
+    /**
      * Fetch calendar and save the result into json.
      *
      * @return bool
      */
-    public function update($month = null)
+    public function update()
     {
         $url = $this->mmp_main.'lib/ajax/service.php?info=core_calendar_get_calendar_monthly_view&sesskey='.$this->getSesskey();
         $calendar = $this->client()->timeout(20)->post($url, [
@@ -72,7 +91,7 @@ class CalendarService
                 'methodname' => 'core_calendar_get_calendar_monthly_view',
                 'args'       => [
                     'year'              => date('Y'),
-                    'month'             => $month ?: date('m'),
+                    'month'             => $this->customMonth,
                     'courseid'          => 1,
                     'categoryid'        => 0,
                     'includenavigation' => false,
