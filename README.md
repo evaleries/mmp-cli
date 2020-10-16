@@ -19,9 +19,11 @@ MMP CLI was created by, and is maintained by [evaleries](https://github.com/eval
 
 ### Setup
 
-First of all, set up your NIM & Password in `.env` correctly.
+First of all, clone this repository.
 
 Run `composer install` command.
+
+Then, set up your NIM & Password in `.env` correctly.
 
 Finally, try login by running `php mmp login`
 
