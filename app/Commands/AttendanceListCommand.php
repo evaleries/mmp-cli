@@ -71,7 +71,7 @@ class AttendanceListCommand extends Command
         $month = now()->month;
         if ($this->option('custom')) {
             $month = $this->anticipate('Jadwal di bulan apa?', range(1, 12), now()->month);
-            $this->task('Updating attendances for '.now()->setMonth($month)->locale('id')->monthName, fn () => $this->calendarService->update($month));
+            $this->task('Updating attendances for '.now()->setMonth($month)->locale('id')->monthName, fn () => $this->calendarService->month($month)->update());
         }
 
         $this->title('List Jadwal Absen di Bulan '.now()->setMonth($month)->locale('id')->monthName);
