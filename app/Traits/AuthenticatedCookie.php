@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Storage;
 
 trait AuthenticatedCookie
 {
+    use CustomHttpClient;
+
     protected $sso = 'https://sso.unej.ac.id/cas/login';
     protected $mmp = 'https://mmp.unej.ac.id/login/index.php';
     protected $mmp_main = 'https://mmp.unej.ac.id/';
@@ -22,13 +24,6 @@ trait AuthenticatedCookie
      * @var string
      */
     private $sesskey;
-
-    /**
-     * User Agent.
-     *
-     * @var string
-     */
-    private $userAgent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.75 Safari/537.36';
 
     /**
      * Loaded cookies.
@@ -130,13 +125,10 @@ trait AuthenticatedCookie
      */
     public function client(): PendingRequest
     {
-        $httpClient = Http::withUserAgent($this->userAgent)
-            ->withoutVerifying()
+        return $this->http()
             ->withOptions([
                 'cookies' => $this->cookieJar(),
             ]);
-
-        return $httpClient;
     }
 
     /**
