@@ -6,7 +6,6 @@ use App\Traits\AuthenticatedCookie;
 use Carbon\Carbon;
 use Carbon\Exceptions\NotLocaleAwareException;
 use Exception;
-use Illuminate\Console\Concerns\InteractsWithIO;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
@@ -15,7 +14,6 @@ use Symfony\Component\Translation\Exception\InvalidArgumentException;
 class CalendarService
 {
     use AuthenticatedCookie;
-    use InteractsWithIO;
 
     /**
      * calendar result file name.
@@ -27,7 +25,6 @@ class CalendarService
     public function __construct()
     {
         $this->calendarFile = 'calendar-monthly.json';
-        $this->output = resolve('console.output');
     }
 
     /**
