@@ -46,5 +46,10 @@
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
-    "bin": ["mmp"]
+    "bin": ["mmp"],
+    "scripts": {
+        "post-install-cmd": [
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+        ]
+    }
 }
