@@ -29,7 +29,6 @@ class CalendarService
      */
     protected $customMonth;
 
-
     public function __construct()
     {
         $this->calendarFile = 'calendar-monthly.json';
@@ -68,7 +67,7 @@ class CalendarService
      * Customize month for update the calendar.
      *
      * @param int $customMonth
-     * 
+     *
      * @return CalendarService
      */
     public function month($customMonth): CalendarService

@@ -55,5 +55,4 @@ trait CustomHttpClient
 
         return $http;
     }
-
 }
