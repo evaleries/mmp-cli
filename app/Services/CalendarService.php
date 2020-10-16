@@ -65,9 +65,10 @@ class CalendarService
     }
 
     /**
-     * Customize month for update the calendar
+     * Customize month for update the calendar.
      *
      * @param int $customMonth
+     * 
      * @return CalendarService
      */
     public function month($customMonth): CalendarService

@@ -36,7 +36,7 @@ trait CustomHttpClient
     protected $followRedirects = true;
 
     /**
-     * Customized Http client
+     * Customized Http client.
      *
      * @return PendingRequest
      */
@@ -45,11 +45,13 @@ trait CustomHttpClient
         $http = Http::timeout($this->timeout)
             ->withUserAgent($this->userAgent);
 
-        if (!$this->followRedirects)
+        if (!$this->followRedirects) {
             $http->withoutRedirecting();
+        }
 
-        if ($this->verifyCertificates)
+        if ($this->verifyCertificates) {
             $http->withoutVerifying();
+        }
 
         return $http;
     }
