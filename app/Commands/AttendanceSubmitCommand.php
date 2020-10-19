@@ -35,11 +35,11 @@ class AttendanceSubmitCommand extends Command
     protected $attendances;
 
     /**
-     * Calendar Service.
+     * Submit Attendance Service.
      *
      * @var SubmitAttendanceService
      */
-    protected $submitAttendanceService;
+    protected $submitAttendance;
 
     /**
      * Assignment Service.
@@ -49,7 +49,7 @@ class AttendanceSubmitCommand extends Command
     protected $attendanceService;
 
     /**
-     * @param SubmitAttendanceService $submitAttendanceService
+     * @param SubmitAttendanceService $submitAttendance
      * @param AttendanceService       $attendanceService
      *
      * @throws InvalidArgumentException
@@ -58,11 +58,11 @@ class AttendanceSubmitCommand extends Command
      *
      * @return void
      */
-    public function __construct(SubmitAttendanceService $submitAttendanceService, AttendanceService $attendanceService)
+    public function __construct(SubmitAttendanceService $submitAttendance, AttendanceService $attendanceService)
     {
         parent::__construct();
 
-        $this->submitAttendanceService = $submitAttendanceService;
+        $this->submitAttendance = $submitAttendance;
         $this->attendanceService = $attendanceService;
     }
 
@@ -80,10 +80,10 @@ class AttendanceSubmitCommand extends Command
         }
 
         $selectedCourse = $this->choice('ID Matkul', $this->attendances->toArray());
-        $this->task('Gathering information from attendance', fn () => $this->submitAttendanceService->prepare($selectedCourse));
+        $this->task('Gathering information from attendance', fn () => $this->submitAttendance->prepare($selectedCourse));
 
-        if (!empty($this->submitAttendanceService->attendanceOptions)) {
-            $attendanceOptions = $this->submitAttendanceService->attendanceOptions;
+        if (!empty($this->submitAttendance->attendanceOptions)) {
+            $attendanceOptions = $this->submitAttendance->attendanceOptions;
             $selectedOption = $this->choice('Pilih status absen', $attendanceOptions, 'Present');
 
             $optionKey = array_search($selectedOption, $attendanceOptions);
@@ -92,7 +92,7 @@ class AttendanceSubmitCommand extends Command
                 return $this->error('Invalid option');
             }
 
-            $this->task('Submitting attendance', fn () => $this->submitAttendanceService->execute($optionKey));
+            $this->task('Submitting attendance', fn () => $this->submitAttendance->execute($optionKey));
         }
     }
 
@@ -105,8 +105,8 @@ class AttendanceSubmitCommand extends Command
     {
         // $selectedCourse = $this->option('course');
         // if ($this->attendances->contains($selectedCourse)) {
-        //     $optionValue = $this->attendanceService->attendanceOptions[array_search('Present', $this->submitAttendanceService->attendanceOptions)];
-        //     return $this->submitAttendanceService->prepare($selectedCourse)->execute();
+        //     $optionValue = $this->attendanceService->attendanceOptions[array_search('Present', $this->submitAttendance->attendanceOptions)];
+        //     return $this->submitAttendance->prepare($selectedCourse)->execute();
         // } else {
         //     throw new Exception('Invalid course id');
         // }
