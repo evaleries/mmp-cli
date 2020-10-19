@@ -95,7 +95,7 @@ class LoginService
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return bool
      */
     public function execute()
     {
@@ -128,6 +128,10 @@ class LoginService
             throw new Exception('Login failed. Invalid credentials!');
         }
 
+        if (!$submitLogin->redirect()) {
+            throw new Exception('SSO not redirecting you to MMP. Maybe the MMP is down');
+        }
+
         if (!preg_match('/Invalid credentials/mi', $submitLogin->body())) {
             $this->saveCookies($submitLogin->cookies());
             $this->saveResponse('dashboard.html', $submitLogin->body());
@@ -136,5 +140,16 @@ class LoginService
         }
 
         return false;
+    }
+
+    /**
+     * Re-login
+     *
+     * @param array $creds
+     * @return bool
+     */
+    public static function relogin($creds = null)
+    {
+        return (new static)->withCredential($creds ?? config('sister'))->execute();
     }
 }
