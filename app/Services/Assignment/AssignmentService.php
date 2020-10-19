@@ -48,7 +48,7 @@ class AssignmentService extends CalendarService
 
         return $assignments->map(function ($event) {
             $due_date = $this->formatTimestamp($event->get('timestart'));
-            $description = strip_tags($event->get('description'));
+            $description = trim(str_replace(["\r", "\n"], '', strip_tags($event->get('description'))));
 
             return [
                 'index'       => $event->get('id'),
