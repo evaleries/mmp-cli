@@ -28,30 +28,35 @@ class AttendanceSubmitCommand extends Command
     protected $description = 'Submit an attendance for selected course';
 
     /**
-     * List of attendance Ids
+     * List of attendance Ids.
+     *
      * @var Collection
      */
     protected $attendances;
 
     /**
-     * Calendar Service
+     * Calendar Service.
+     *
      * @var SubmitAttendanceService
      */
     protected $submitAttendanceService;
 
     /**
-     * Assignment Service
+     * Assignment Service.
+     *
      * @var AttendanceService
      */
     protected $attendanceService;
 
     /**
      * @param SubmitAttendanceService $submitAttendanceService
-     * @param AttendanceService $attendanceService
-     * @return void
+     * @param AttendanceService       $attendanceService
+     *
      * @throws InvalidArgumentException
      * @throws ExceptionInvalidArgumentException
      * @throws LogicException
+     *
+     * @return void
      */
     public function __construct(SubmitAttendanceService $submitAttendanceService, AttendanceService $attendanceService)
     {
@@ -75,7 +80,7 @@ class AttendanceSubmitCommand extends Command
         }
 
         $selectedCourse = $this->choice('ID Matkul', $this->attendances->toArray());
-        $this->task('Gathering information from attendance', fn() => $this->submitAttendanceService->prepare($selectedCourse));
+        $this->task('Gathering information from attendance', fn () => $this->submitAttendanceService->prepare($selectedCourse));
 
         if (!empty($this->submitAttendanceService->attendanceOptions)) {
             $attendanceOptions = $this->submitAttendanceService->attendanceOptions;
@@ -87,12 +92,12 @@ class AttendanceSubmitCommand extends Command
                 return $this->error('Invalid option');
             }
 
-            $this->task('Submitting attendance', fn() => $this->submitAttendanceService->execute($optionKey));
+            $this->task('Submitting attendance', fn () => $this->submitAttendanceService->execute($optionKey));
         }
     }
 
     /**
-     * WIP
+     * WIP.
      *
      * @return void
      */
@@ -110,7 +115,8 @@ class AttendanceSubmitCommand extends Command
     /**
      * Define the command's schedule.
      *
-     * @param  \Illuminate\Console\Scheduling\Schedule $schedule
+     * @param \Illuminate\Console\Scheduling\Schedule $schedule
+     *
      * @return void
      */
     public function schedule(Schedule $schedule): void
