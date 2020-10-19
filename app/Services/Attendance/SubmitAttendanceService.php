@@ -9,7 +9,8 @@ use Illuminate\Console\Concerns\InteractsWithIO;
 
 class SubmitAttendanceService
 {
-    use AuthenticatedCookie, InteractsWithIO;
+    use AuthenticatedCookie;
+    use InteractsWithIO;
 
     /**
      * Default form action.
@@ -27,6 +28,7 @@ class SubmitAttendanceService
 
     /**
      * Attendance options.
+     *
      * @var mixed
      */
     public $attendanceOptions;
@@ -54,7 +56,7 @@ class SubmitAttendanceService
         $this->sessid = $sessIds[1][0] ?? null;
         $this->sesskey = $sesskeys[1][0] ?? null;
 
-        if (! $this->sessid || ! $this->sesskey) {
+        if (!$this->sessid || !$this->sesskey) {
             throw new Exception('Sessid or sesskey is empty. Maybe the class hasn\'t started yet or already over.');
         }
 
@@ -78,25 +80,26 @@ class SubmitAttendanceService
         if (preg_match('/errormessage/im', $response)) {
             $this->error('Something happened!');
             preg_match_all('/"errormessage">(.*?)<\/p>/im', $response, $errors);
+
             throw new Exception($errors[1][0] ? html_entity_decode($errors[1][0]) : 'Unknown Error!');
         }
 
         if (preg_match('/Please log in/im', $response)) {
             $this->info('Session is expired, trying to re-login');
-            (new LoginService)->withCredential(config('sister'))->execute();
+            (new LoginService())->withCredential(config('sister'))->execute();
         }
     }
 
     public function prepare($courseId)
     {
-        $attendanceForm = $this->client()->timeout(15)->get($this->mmp_main . 'mod/attendance/view.php?id=' . $courseId);
+        $attendanceForm = $this->client()->timeout(15)->get($this->mmp_main.'mod/attendance/view.php?id='.$courseId);
 
         $this->checkResponse($attendanceForm->body());
         $this->saveResponse('attendance-view.html', $attendanceForm->body());
         $this->extractFormData($attendanceForm->body());
 
         $viewAttendance = $this->client()->get($this->formAction ?: $this->defaultFormAction, [
-            'sessid' => $this->sessid,
+            'sessid'  => $this->sessid,
             'sesskey' => $this->sesskey,
         ]);
 
@@ -105,16 +108,17 @@ class SubmitAttendanceService
         }
 
         $this->attendanceOptions = $this->extractAttendanceOptions($viewAttendance->body());
+
         return $this;
     }
 
     public function execute($status)
     {
         $doAttendance = $this->client()->asForm()->post($this->formAction ?: $this->defaultFormAction, [
-            'sessid' => $this->sessid,
-            'sesskey' => $this->sesskey,
-            'status' => $status,
-            'mform_isexpanded_id_session' => 1,
+            'sessid'                                      => $this->sessid,
+            'sesskey'                                     => $this->sesskey,
+            'status'                                      => $status,
+            'mform_isexpanded_id_session'                 => 1,
             '_qf__mod_attendance_student_attendance_form' => 1,
         ]);
 
