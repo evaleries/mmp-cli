@@ -85,7 +85,7 @@ trait AuthenticatedCookie
         }
 
         if (!is_array($cookies)) {
-            throw new \InvalidArgumentException('Cookies is not an array, but '.gettype($cookies).' given');
+            throw new \InvalidArgumentException('Cookies is not an array.');
         }
 
         return Storage::put($this->cookieFile(), json_encode($cookies, JSON_PRETTY_PRINT));
