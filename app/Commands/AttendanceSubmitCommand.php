@@ -4,6 +4,7 @@ namespace App\Commands;
 
 use App\Services\Attendance\AttendanceService;
 use App\Services\Attendance\SubmitAttendanceService;
+use Exception;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
@@ -18,7 +19,7 @@ class AttendanceSubmitCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'attend:submit {--course= : id mata kuliah} {--status=Present : Attendance Status}';
+    protected $signature = 'attend:submit {--course= : id mata kuliah} {--status=Present : Attendance Status} {--all}';
 
     /**
      * The description of the command.
@@ -73,7 +74,14 @@ class AttendanceSubmitCommand extends Command
      */
     public function handle()
     {
-        $this->attendances = $this->attendanceService->attendances()->pluck('instance')->unique();
+        $this->attendances = ($this->option('all')
+            ? $this->attendanceService->attendances()
+            : $this->attendanceService->today()
+        )->pluck('instance')->unique();
+
+        if ($this->attendances->isEmpty()) {
+            return $this->info('No attendance for today. Add --all to list all attendances');
+        }
 
         if ($this->option('course')) {
             return $this->handleCourse();
@@ -97,19 +105,25 @@ class AttendanceSubmitCommand extends Command
     }
 
     /**
-     * WIP.
+     * Handle given options | no interactive.
      *
      * @return void
      */
     protected function handleCourse()
     {
-        // $selectedCourse = $this->option('course');
-        // if ($this->attendances->contains($selectedCourse)) {
-        //     $optionValue = $this->attendanceService->attendanceOptions[array_search('Present', $this->submitAttendance->attendanceOptions)];
-        //     return $this->submitAttendance->prepare($selectedCourse)->execute();
-        // } else {
-        //     throw new Exception('Invalid course id');
-        // }
+        $selectedCourse = $this->option('course');
+        if (!$this->attendances->contains($selectedCourse)) {
+            throw new Exception('Invalid course id');
+        }
+
+        $attendStatus = array_search($this->option('status'), $this->submitAttendance->attendanceOptions);
+        if (!$attendStatus) {
+            throw new Exception('Invalid attendance option. Given: '.$this->option('status'));
+        }
+
+        $this->submitAttendance
+            ->prepare($selectedCourse)
+            ->execute($attendStatus);
     }
 
     /**
