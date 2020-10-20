@@ -52,6 +52,15 @@ You can easily check the upcoming attendaces by running these commands below.
 -   `php mmp attend:list --latest` - Update the upcoming attendances
 -   `php mmp attend:list --custom` - Custom month.
 
+#### Submit Attendance
+
+Submit an attendance with ease.
+
+-   `php mmp attend:submit` - Run command in interactive mode. (Give an options for course id & attendance status).
+-   `php mmp attend:submit --course=COURSEID` - Submit attendance with specified _course id_ & set status to `Present`. This option won't give you an option (non interactive mode)
+-   `php mmp attend:submit --course=COURSEID --status=Late` - You also can customize the attendance status to one of these `Present`, `Excused`, `Late`, `Absent`. The default is `Present`.
+-   `php mmp attend:submit --all` - Show all attendances. Without passing `--all`, this command will show only for today's attendance.
+
 #### Help
 
 If you need help with the command, pass `help` on the first argument before the command.
