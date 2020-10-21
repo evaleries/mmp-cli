@@ -9,6 +9,13 @@ use Illuminate\Support\Collection;
 class AttendanceService extends CalendarService
 {
     /**
+     * List of attendance.
+     *
+     * @var Collection
+     */
+    private $attendanceList;
+
+    /**
      * Get attendances from upcoming events.
      *
      * @throws Exception
@@ -17,9 +24,44 @@ class AttendanceService extends CalendarService
      */
     public function attendances(): Collection
     {
-        return $this->getUpcomingEvents()
+        return $this->attendanceList = $this->getUpcomingEvents()
             ->filter(fn ($event) => $event->get('modulename') === 'attendance' || $event->get('eventtype') === 'attendance')
             ->values();
+    }
+
+    /**
+     * Retrieve today's attendance.
+     *
+     * @return Collection
+     */
+    public function today(): Collection
+    {
+        return $this->attendanceList = $this->attendances()
+            ->filter(fn ($event) => $this->formatTimestamp($event->get('timestart'))->isCurrentDay())
+            ->values();
+    }
+
+    /**
+     * Retrieve tommorrow's attendance.
+     *
+     * @return Collection
+     */
+    public function tomorrow(): Collection
+    {
+        return $this->attendanceList = $this->attendances()
+            ->filter(fn ($event) => $this->formatTimestamp($event->get('timestart'))->isNextDay())
+            ->values();
+    }
+
+    /**
+     * Re-order the attendance list with date.
+     *
+     * @return Collection
+     */
+    public function orderByDate(): Collection
+    {
+        return $this->attendanceList = $this->attendanceList ?: $this->attendances()
+            ->reverse();
     }
 
     /**
@@ -31,7 +73,7 @@ class AttendanceService extends CalendarService
      */
     public function tableRows($callback = null)
     {
-        $attendances = $this->attendances();
+        $attendances = $this->attendanceList ?? $this->attendances();
 
         if ($callback instanceof Closure) {
             return $attendances->map($callback)->values()->toArray();

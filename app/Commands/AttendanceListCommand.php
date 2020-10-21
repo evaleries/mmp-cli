@@ -17,14 +17,19 @@ class AttendanceListCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'attend:list {--latest : update jadwal terbaru} {--custom : memilih bulan tertentu}';
+    protected $signature = 'attend:list 
+        {--latest   : Update jadwal terbaru} 
+        {--custom   : Memilih bulan tertentu} 
+        {--today    : Daftar absen hari ini}
+        {--tomorrow : Daftar absen besok}
+        {--desc     : Mengurutkan daftar absensi dengan tanggal terbaru}';
 
     /**
      * The description of the command.
      *
      * @var string
      */
-    protected $description = 'List of upcoming attendances';
+    protected $description = 'Daftar absensi online';
 
     /**
      * Calendar Service.
@@ -64,9 +69,7 @@ class AttendanceListCommand extends Command
      */
     public function handle()
     {
-        if ($this->option('latest')) {
-            $this->task('Updating attendances', fn () => $this->calendarService->update());
-        }
+        $this->handleOptions();
 
         $month = now()->month;
         if ($this->option('custom')) {
@@ -80,6 +83,25 @@ class AttendanceListCommand extends Command
         }
 
         $this->table(['#', 'id', 'topic', 'when', 'schedule', 'duration'], $this->attendanceService->tableRows());
+    }
+
+    protected function handleOptions()
+    {
+        if ($this->option('today')) {
+            $this->attendanceService->today();
+        }
+
+        if ($this->option('tomorrow')) {
+            $this->attendanceService->tomorrow();
+        }
+
+        if ($this->option('desc')) {
+            $this->attendanceService->orderByDate();
+        }
+
+        if ($this->option('latest')) {
+            $this->task('Updating attendances', fn () => $this->calendarService->update());
+        }
     }
 
     /**

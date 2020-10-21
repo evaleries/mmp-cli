@@ -104,10 +104,10 @@ class CalendarService
             $response = collect(json_decode($calendar->body(), true))->collapse();
 
             if ($response->get('error')) {
-                $exceptionMessage = data_get($response, 'exception.message', 'Error were occured. Try re-login using php mmp login command');
+                $errroMessage = data_get($response, 'exception.message', 'Error were occured. Try re-login using php mmp login command');
 
-                if (str_contains($exceptionMessage, 'Web service is not available') || str_contains($exceptionMessage, 'expired')) {
-                    (new LoginService())->withCredential(config('sister'))->execute();
+                if (str_contains($errroMessage, 'Web service is not available') || str_contains($errroMessage, 'expired') || str_contains($errroMessage, 'Please log in again')) {
+                    LoginService::relogin();
 
                     return $this->update();
                 }

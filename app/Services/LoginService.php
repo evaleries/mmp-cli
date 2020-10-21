@@ -11,12 +11,12 @@ class LoginService
 {
     use AuthenticatedCookie;
 
-    private $service_url = null;
+    private $serviceUrl = null;
     private $credentials = [];
 
     public function setService($service): LoginService
     {
-        $this->service_url = $service;
+        $this->serviceUrl = $service;
 
         return $this;
     }
@@ -24,7 +24,7 @@ class LoginService
     public function getSSOServiceUrl(): string
     {
         return $this->sso.'?service='.urlencode(
-            $this->service_url ?: $this->mmp
+            $this->serviceUrl ?: $this->mmp
         );
     }
 
@@ -95,7 +95,7 @@ class LoginService
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return bool
      */
     public function execute()
     {
@@ -128,6 +128,11 @@ class LoginService
             throw new Exception('Login failed. Invalid credentials!');
         }
 
+        if (!$submitLogin->redirect()) {
+            $this->saveResponse('login-failed.html', $submitLogin->body());
+            throw new Exception('SSO not redirecting you to MMP. Maybe the MMP is down');
+        }
+
         if (!preg_match('/Invalid credentials/mi', $submitLogin->body())) {
             $this->saveCookies($submitLogin->cookies());
             $this->saveResponse('dashboard.html', $submitLogin->body());
@@ -136,5 +141,16 @@ class LoginService
         }
 
         return false;
+    }
+
+    /**
+     * Re-login
+     *
+     * @param array $creds
+     * @return bool
+     */
+    public static function relogin($creds = null)
+    {
+        return (new static)->withCredential($creds ?? config('sister'))->execute();
     }
 }
