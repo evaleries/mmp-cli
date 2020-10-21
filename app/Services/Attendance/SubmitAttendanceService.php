@@ -87,7 +87,7 @@ class SubmitAttendanceService
 
         if (preg_match('/Please log in/im', $attendanceForm->body())) {
             $this->info('Session is expired, trying to re-login');
-            (new LoginService())->withCredential(config('sister'))->execute();
+            LoginService::relogin();
             return $this->prepare($courseId);
         }
 
