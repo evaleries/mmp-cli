@@ -125,16 +125,4 @@ class AttendanceSubmitCommand extends Command
         
         $this->task('Submitting attendance', fn () => $this->submitAttendance->execute($attendStatus));
     }
-
-    /**
-     * Define the command's schedule.
-     *
-     * @param \Illuminate\Console\Scheduling\Schedule $schedule
-     *
-     * @return void
-     */
-    public function schedule(Schedule $schedule): void
-    {
-        // $schedule->command(static::class)->everyMinute();
-    }
 }
