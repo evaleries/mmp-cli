@@ -53,6 +53,9 @@ You can easily check the upcoming attendaces by running these commands below.
 -   `php mmp attend:list` - List of attendances on current month
 -   `php mmp attend:list --latest` - Update the upcoming attendances
 -   `php mmp attend:list --custom` - Custom month.
+-   `php mmp attend:list --today` - List of today's attendance.
+-   `php mmp attend:list --tomorrow` - List of tomorrow's attendance.
+-   `php mmp attend:list --desc` - Reversed list of attendance (order desc by date).
 
 #### Submit Attendance
 
