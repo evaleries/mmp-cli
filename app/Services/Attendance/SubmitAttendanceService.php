@@ -82,12 +82,14 @@ class SubmitAttendanceService
         if (preg_match('/errormessage/im', $attendanceForm->body())) {
             $this->error('Something happened!');
             preg_match_all('/"errormessage">(.*?)<\/p>/im', $attendanceForm->body(), $errors);
+
             throw new Exception($errors[1][0] ? html_entity_decode($errors[1][0]) : 'Unknown Error!');
         }
 
         if (preg_match('/Please log in/im', $attendanceForm->body())) {
             $this->info('Session is expired, trying to re-login');
             LoginService::relogin();
+
             return $this->prepare($courseId);
         }
 
