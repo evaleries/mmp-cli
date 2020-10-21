@@ -129,6 +129,7 @@ class LoginService
         }
 
         if (!$submitLogin->redirect()) {
+            $this->saveResponse('login-failed.html', $submitLogin->body());
             throw new Exception('SSO not redirecting you to MMP. Maybe the MMP is down');
         }
 
