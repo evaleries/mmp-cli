@@ -5,7 +5,6 @@ namespace App\Commands;
 use App\Services\Attendance\AttendanceService;
 use App\Services\Attendance\SubmitAttendanceService;
 use Exception;
-use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
 use LaravelZero\Framework\Commands\Command;
@@ -74,7 +73,8 @@ class AttendanceSubmitCommand extends Command
      */
     public function handle()
     {
-        $this->attendances = ($this->option('all')
+        $this->attendances = (
+            $this->option('all')
             ? $this->attendanceService->attendances()
             : $this->attendanceService->today()
         )->pluck('instance')->unique();
@@ -122,7 +122,7 @@ class AttendanceSubmitCommand extends Command
         if (!$attendStatus) {
             throw new Exception('Invalid attendance option. Given: '.$this->option('status'));
         }
-        
+
         $this->task('Submitting attendance', fn () => $this->submitAttendance->execute($attendStatus));
     }
 }
