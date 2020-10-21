@@ -11,12 +11,12 @@ class LoginService
 {
     use AuthenticatedCookie;
 
-    private $service_url = null;
+    private $serviceUrl = null;
     private $credentials = [];
 
     public function setService($service): LoginService
     {
-        $this->service_url = $service;
+        $this->serviceUrl = $service;
 
         return $this;
     }
@@ -24,7 +24,7 @@ class LoginService
     public function getSSOServiceUrl(): string
     {
         return $this->sso.'?service='.urlencode(
-            $this->service_url ?: $this->mmp
+            $this->serviceUrl ?: $this->mmp
         );
     }
 
