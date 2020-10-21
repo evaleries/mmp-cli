@@ -23,6 +23,30 @@ class AttendanceService extends CalendarService
     }
 
     /**
+     * Retrieve today's attendance.
+     *
+     * @return Collection
+     */
+    public function today(): Collection
+    {
+        return $this->attendances()
+            ->filter(fn ($event) => $this->formatTimestamp($event->get('timestart'))->isCurrentDay())
+            ->values();
+    }
+
+    /**
+     * Retrieve tommorrow's attendance.
+     *
+     * @return Collection
+     */
+    public function tomorrow(): Collection
+    {
+        return $this->attendances()
+            ->filter(fn ($event) => $this->formatTimestamp($event->get('timestart'))->isNextDay())
+            ->values();
+    }
+
+    /**
      * Get attendances as a table rows.
      *
      * @param Closure|null $callback
