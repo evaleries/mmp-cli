@@ -116,14 +116,14 @@ class AttendanceSubmitCommand extends Command
             throw new Exception('Invalid course id');
         }
 
+        $this->task('Gathering attendance information', fn () => $this->submitAttendance->prepare($selectedCourse));
+
         $attendStatus = array_search($this->option('status'), $this->submitAttendance->attendanceOptions);
         if (!$attendStatus) {
             throw new Exception('Invalid attendance option. Given: '.$this->option('status'));
         }
-
-        $this->submitAttendance
-            ->prepare($selectedCourse)
-            ->execute($attendStatus);
+        
+        $this->task('Submitting attendance', fn () => $this->submitAttendance->execute($attendStatus));
     }
 
     /**

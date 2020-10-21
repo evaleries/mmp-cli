@@ -75,26 +75,22 @@ class SubmitAttendanceService
         return $this->attendanceOptions = array_combine($optionsValue[1], $optionsLabel[1]);
     }
 
-    protected function checkResponse($response)
-    {
-        if (preg_match('/errormessage/im', $response)) {
-            $this->error('Something happened!');
-            preg_match_all('/"errormessage">(.*?)<\/p>/im', $response, $errors);
-
-            throw new Exception($errors[1][0] ? html_entity_decode($errors[1][0]) : 'Unknown Error!');
-        }
-
-        if (preg_match('/Please log in/im', $response)) {
-            $this->info('Session is expired, trying to re-login');
-            (new LoginService())->withCredential(config('sister'))->execute();
-        }
-    }
-
     public function prepare($courseId)
     {
         $attendanceForm = $this->client()->timeout(15)->get($this->mmp_main.'mod/attendance/view.php?id='.$courseId);
 
-        $this->checkResponse($attendanceForm->body());
+        if (preg_match('/errormessage/im', $attendanceForm->body())) {
+            $this->error('Something happened!');
+            preg_match_all('/"errormessage">(.*?)<\/p>/im', $attendanceForm->body(), $errors);
+            throw new Exception($errors[1][0] ? html_entity_decode($errors[1][0]) : 'Unknown Error!');
+        }
+
+        if (preg_match('/Please log in/im', $attendanceForm->body())) {
+            $this->info('Session is expired, trying to re-login');
+            (new LoginService())->withCredential(config('sister'))->execute();
+            return $this->prepare($courseId);
+        }
+
         $this->saveResponse('attendance-view.html', $attendanceForm->body());
         $this->extractFormData($attendanceForm->body());
 
@@ -107,7 +103,8 @@ class SubmitAttendanceService
             throw new Exception('Can\'t fetch attendance options form');
         }
 
-        $this->attendanceOptions = $this->extractAttendanceOptions($viewAttendance->body());
+        $this->saveResponse('attendance-view-form.html', $viewAttendance->body());
+        $this->extractAttendanceOptions($viewAttendance->body());
 
         return $this;
     }
