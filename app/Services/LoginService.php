@@ -128,7 +128,7 @@ class LoginService
             throw new Exception('Login failed. Invalid credentials!');
         }
 
-        if (!$submitLogin->redirect()) {
+        if (!$submitLogin->redirect() && $submitLogin->effectiveUri()->getHost() != 'mmp.unej.ac.id') {
             $this->saveResponse('login-failed.html', $submitLogin->body());
 
             throw new Exception('SSO not redirecting you to MMP. Maybe the MMP is down');
