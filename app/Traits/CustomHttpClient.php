@@ -19,7 +19,7 @@ trait CustomHttpClient
      *
      * @var int
      */
-    protected $timeout = 30;
+    protected $timeout = 60;
 
     /**
      * Indicate that TLS certificates should be verified.
