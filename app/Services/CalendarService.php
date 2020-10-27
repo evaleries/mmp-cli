@@ -85,7 +85,7 @@ class CalendarService
     public function update()
     {
         $url = $this->mmp_main.'lib/ajax/service.php?info=core_calendar_get_calendar_monthly_view&sesskey='.$this->getSesskey();
-        $calendar = $this->client()->timeout(20)->post($url, [
+        $calendar = $this->client()->post($url, [
             [
                 'index'      => 0,
                 'methodname' => 'core_calendar_get_calendar_monthly_view',
