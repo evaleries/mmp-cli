@@ -49,7 +49,7 @@ trait CustomHttpClient
             $http->withoutRedirecting();
         }
 
-        if ($this->verifyCertificates) {
+        if (!$this->verifyCertificates) {
             $http->withoutVerifying();
         }
 
