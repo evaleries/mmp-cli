@@ -77,7 +77,7 @@ class SubmitAttendanceService
 
     public function prepare($courseId)
     {
-        $attendanceForm = $this->client()->timeout(15)->get($this->mmp_main.'mod/attendance/view.php?id='.$courseId);
+        $attendanceForm = $this->client()->get($this->mmp_main.'mod/attendance/view.php?id='.$courseId);
 
         if (preg_match('/errormessage/im', $attendanceForm->body())) {
             $this->error('Something happened!');

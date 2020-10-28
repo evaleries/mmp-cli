@@ -87,6 +87,10 @@ class AttendanceListCommand extends Command
 
     protected function handleOptions()
     {
+        if ($this->option('latest')) {
+            $this->task('Updating attendances', fn () => $this->calendarService->update());
+        }
+
         if ($this->option('today')) {
             $this->attendanceService->today();
         }
@@ -99,9 +103,6 @@ class AttendanceListCommand extends Command
             $this->attendanceService->orderByDate();
         }
 
-        if ($this->option('latest')) {
-            $this->task('Updating attendances', fn () => $this->calendarService->update());
-        }
     }
 
     /**
