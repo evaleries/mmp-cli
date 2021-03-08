@@ -90,11 +90,11 @@ class CalendarService
                 'index'      => 0,
                 'methodname' => 'core_calendar_get_calendar_monthly_view',
                 'args'       => [
-                    'year'              => date('Y'),
-                    'month'             => $this->customMonth,
+                    'year'              => intval(date('Y')),
+                    'month'             => intval($this->customMonth),
                     'courseid'          => 1,
                     'categoryid'        => 0,
-                    'includenavigation' => false,
+                    'includenavigation' => 0,
                     'mini'              => true,
                 ],
             ],
@@ -104,9 +104,9 @@ class CalendarService
             $response = collect(json_decode($calendar->body(), true))->collapse();
 
             if ($response->get('error')) {
-                $errroMessage = data_get($response, 'exception.message', 'Error were occured. Try re-login using php mmp login command');
+                $errorMessage = data_get($response, 'exception.message', 'Error were occured. Try re-login using php mmp login command');
 
-                if (str_contains($errroMessage, 'Web service is not available') || str_contains($errroMessage, 'expired') || str_contains($errroMessage, 'Please log in again')) {
+                if (str_contains($errorMessage, 'Web service is not available') || str_contains($errorMessage, 'expired') || str_contains($errorMessage, 'Please log in again')) {
                     LoginService::relogin();
 
                     return $this->update();
