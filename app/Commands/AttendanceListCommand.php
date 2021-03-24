@@ -19,9 +19,10 @@ class AttendanceListCommand extends Command
      */
     protected $signature = 'attend:list 
         {--latest   : Update jadwal terbaru} 
-        {--custom   : Memilih bulan tertentu} 
-        {--today    : Daftar absen hari ini}
+        {custom   : Memilih bulan tertentu} 
+        {--t|--today    : Daftar absen hari ini}
         {--tomorrow : Daftar absen besok}
+        {--u|--upcoming : Daftar absen yang akan datang}
         {--desc     : Mengurutkan daftar absensi dengan tanggal terbaru}';
 
     /**
@@ -73,7 +74,7 @@ class AttendanceListCommand extends Command
 
         $month = now()->month;
         if ($this->option('custom')) {
-            $month = $this->anticipate('Jadwal di bulan apa?', range(1, 12), now()->month);
+            $month = $this->anticipate('Jadwal di bulan apa?', range(1, 12), $month);
             $this->task('Updating attendances for '.now()->setMonth($month)->locale('id')->monthName, fn () => $this->calendarService->month($month)->update());
         }
 
@@ -97,6 +98,10 @@ class AttendanceListCommand extends Command
 
         if ($this->option('tomorrow')) {
             $this->attendanceService->tomorrow();
+        }
+
+        if ($this->option('upcoming')) {
+            $this->attendanceService->upcoming();
         }
 
         if ($this->option('desc')) {
