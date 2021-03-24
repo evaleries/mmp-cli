@@ -55,7 +55,7 @@ class AttendanceService extends CalendarService
 
     /**
      * Retrieve upcoming attendances.
-     * 
+     *
      * @return Collection
      */
     public function upcoming(): Collection

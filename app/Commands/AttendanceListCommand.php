@@ -107,7 +107,6 @@ class AttendanceListCommand extends Command
         if ($this->option('desc')) {
             $this->attendanceService->orderByDate();
         }
-
     }
 
     /**
