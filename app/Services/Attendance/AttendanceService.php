@@ -54,6 +54,18 @@ class AttendanceService extends CalendarService
     }
 
     /**
+     * Retrieve upcoming attendances.
+     *
+     * @return Collection
+     */
+    public function upcoming(): Collection
+    {
+        return $this->attendanceList = $this->attendances()
+            ->filter(fn ($event) => !$this->formatTimestamp($event->get('timestart'))->isPast())
+            ->values();
+    }
+
+    /**
      * Re-order the attendance list with date.
      *
      * @return Collection

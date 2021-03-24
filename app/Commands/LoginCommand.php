@@ -31,7 +31,7 @@ class LoginCommand extends Command
     protected function tasks()
     {
         return [
-            'Login SSO Sister via HTTP Client' => fn () => (new LoginService())->withCredential(config('sister'))->execute(),
+            'Login SSO Sister via HTTP Client' => fn () => LoginService::relogin(),
             'Getting calendar updates'         => fn () => (new CalendarService())->update(),
         ];
     }
