@@ -18,8 +18,8 @@ class AttendanceListCommand extends Command
      * @var string
      */
     protected $signature = 'attend:list 
-        {--latest   : Update jadwal terbaru} 
-        {custom   : Memilih bulan tertentu} 
+        {--l|--latest   : Update jadwal terbaru} 
+        {--custom   : Memilih bulan tertentu} 
         {--t|--today    : Daftar absen hari ini}
         {--tomorrow : Daftar absen besok}
         {--u|--upcoming : Daftar absen yang akan datang}
