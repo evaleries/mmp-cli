@@ -15,7 +15,7 @@
         }
     ],
     "require": {
-        "php": "^7.3",
+        "php": "^7.4",
         "guzzlehttp/guzzle": "^6.5.5",
         "illuminate/http": "^8.0",
         "intonate/tinker-zero": "^1.1",
