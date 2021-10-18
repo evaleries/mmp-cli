@@ -17,7 +17,7 @@ class SubmitAttendanceService
      *
      * @var string
      */
-    private $defaultFormAction = 'https://mmp.unej.ac.id/mod/attendance/attendance.php';
+    private string $defaultFormAction;
 
     /**
      * Retrieved sessid.
@@ -38,17 +38,18 @@ class SubmitAttendanceService
      *
      * @var string
      */
-    private $formAction;
+    private string $formAction;
 
     public function __construct()
     {
         $this->output = resolve('console.output');
+        $this->defaultFormAction = config('mmp.moodle_baseurl') . 'mod/attendance/attendance.php';
     }
 
     /**
      * Extract form data.
      */
-    protected function extractFormData($response)
+    protected function extractFormData($response): SubmitAttendanceService
     {
         preg_match_all('/sessid=(.+)\&amp;/m', $response, $sessIds);
         preg_match_all('/amp;sesskey=(.+)"/m', $response, $sesskeys);
@@ -75,9 +76,12 @@ class SubmitAttendanceService
         return $this->attendanceOptions = array_combine($optionsValue[1], $optionsLabel[1]);
     }
 
-    public function prepare($courseId)
+    /**
+     * @throws Exception
+     */
+    public function prepare($courseId): SubmitAttendanceService
     {
-        $attendanceForm = $this->client()->get($this->mmp_main.'mod/attendance/view.php?id='.$courseId);
+        $attendanceForm = $this->client()->get($this->mmp_main().'mod/attendance/view.php?id='.$courseId);
 
         if (preg_match('/errormessage/im', $attendanceForm->body())) {
             $this->error('Something happened!');
