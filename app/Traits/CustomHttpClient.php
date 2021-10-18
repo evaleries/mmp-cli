@@ -19,21 +19,21 @@ trait CustomHttpClient
      *
      * @var int
      */
-    protected $timeout = 60;
+    protected int $timeout = 60;
 
     /**
      * Indicate that TLS certificates should be verified.
      *
      * @return PendingRequest
      */
-    protected $verifyCertificates = false;
+    protected bool $verifyCertificates = false;
 
     /**
      * Indicate that redirects should be followed.
      *
      * @var bool
      */
-    protected $followRedirects = true;
+    protected bool $followRedirects = true;
 
     /**
      * Customized Http client.

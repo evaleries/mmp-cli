@@ -84,7 +84,7 @@ class CalendarService
      */
     public function update()
     {
-        $url = $this->mmp_main.'lib/ajax/service.php?info=core_calendar_get_calendar_monthly_view&sesskey='.$this->getSesskey();
+        $url = $this->mmp_main().'lib/ajax/service.php?info=core_calendar_get_calendar_monthly_view&sesskey='.$this->getSesskey();
         $calendar = $this->client()->post($url, [
             [
                 'index'      => 0,
@@ -128,7 +128,7 @@ class CalendarService
     /**
      * Get upcoming.
      *
-     * @return Collection
+     * @return \Illuminate\Support\Collection
      */
     public function getUpcomingEvents()
     {

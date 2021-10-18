@@ -14,30 +14,30 @@ trait AuthenticatedCookie
 {
     use CustomHttpClient;
 
-    protected $sso = 'https://sso.unej.ac.id/cas/login';
-    protected $mmp = 'https://mmp.unej.ac.id/login/index.php';
-    protected $mmp_main = 'https://mmp.unej.ac.id/';
+    protected string $sso;
+    protected string $mmp;
+    protected string $mmp_main;
 
     /**
      * Retrieved sesskey.
      *
      * @var string
      */
-    private $sesskey;
+    private string $sesskey;
 
     /**
      * Loaded cookies.
      *
      * @var Collection
      */
-    private $loadedCookies;
+    private Collection $loadedCookies;
 
     /**
      * Cookie filename.
      *
      * @var string
      */
-    private $cookieFile;
+    private string $cookieFile;
 
     /**
      * Save response to storage.
@@ -47,12 +47,12 @@ trait AuthenticatedCookie
      *
      * @return void
      */
-    public function saveResponse($name, $response)
+    public function saveResponse(string $name, string $response)
     {
         Storage::put('responses/'.$name, $response);
     }
 
-    public function cookieFile()
+    public function cookieFile(): string
     {
         return 'cookies/'.md5(config('sister.nim')).'.json';
     }
@@ -62,7 +62,7 @@ trait AuthenticatedCookie
      *
      * @return string
      */
-    public function cookiePath()
+    public function cookiePath(): string
     {
         return Storage::path($this->cookieFile());
     }
@@ -72,12 +72,13 @@ trait AuthenticatedCookie
      *
      * @param array|CookieJar|null $cookies
      *
-     * @return int|bool
+     * @return bool
      */
-    protected function saveCookies($cookies = null)
+    protected function saveCookies($cookies = null): bool
     {
         if ($cookies === null) {
-            return $this->cookieJar()->save($this->cookiePath());
+            $this->cookieJar()->save($this->cookiePath());
+            return true;
         }
 
         if ($cookies instanceof CookieJar) {
@@ -99,10 +100,10 @@ trait AuthenticatedCookie
     protected function loadCookies()
     {
         if (!File::exists($this->cookiePath())) {
-            return [];
+            return;
         }
 
-        return $this->cookieJar()->load($this->cookiePath());
+        $this->cookieJar()->load($this->cookiePath());
     }
 
     /**
@@ -110,7 +111,7 @@ trait AuthenticatedCookie
      *
      * @return FileCookieJar
      */
-    protected function cookieJar()
+    protected function cookieJar(): FileCookieJar
     {
         return new FileCookieJar(
             $this->cookiePath(),
@@ -145,5 +146,32 @@ trait AuthenticatedCookie
         preg_match_all('/"sesskey":"(.*?)"/si', $response, $tokens);
 
         return $tokens[1][0] ?? null;
+    }
+
+    public function sso(): string
+    {
+        if (!isset($this->sso)) {
+            return $this->sso = config('mmp.sso_baseurl');
+        }
+
+        return $this->sso;
+    }
+
+    public function mmp(): string
+    {
+        if (!isset($this->mmp)) {
+            return $this->mmp = config('mmp.moodle_baseurl') . 'login/index.php';
+        }
+
+        return $this->mmp;
+    }
+
+    public function mmp_main(): string
+    {
+        if (!isset($this->mmp_main)) {
+            return $this->mmp_main = config('mmp.moodle_baseurl');
+        }
+
+        return $this->mmp_main;
     }
 }

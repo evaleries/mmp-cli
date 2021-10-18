@@ -15,7 +15,7 @@ class AssignmentService extends CalendarService
      *
      * @var array
      */
-    protected $options = [];
+    protected array $options = [];
 
     /**
      * Get assignments as a collection.
@@ -34,11 +34,12 @@ class AssignmentService extends CalendarService
     /**
      * Get assignments as a table rows.
      *
-     * @param closure $callback
+     * @param closure|null $callback
      *
      * @return array
+     * @throws Exception
      */
-    public function tableRows($callback = null)
+    public function tableRows(?Closure $callback = null): array
     {
         $assignments = $this->assignments();
 

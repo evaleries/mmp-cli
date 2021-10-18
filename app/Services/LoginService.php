@@ -11,8 +11,8 @@ class LoginService
 {
     use AuthenticatedCookie;
 
-    private $serviceUrl = null;
-    private $credentials = [];
+    private ?string $serviceUrl = null;
+    private ?array $credentials = [];
 
     public function setService($service): LoginService
     {
@@ -23,8 +23,8 @@ class LoginService
 
     public function getSSOServiceUrl(): string
     {
-        return $this->sso.'?service='.urlencode(
-            $this->serviceUrl ?: $this->mmp
+        return $this->sso().'?service='.urlencode(
+            $this->serviceUrl ?: $this->mmp()
         );
     }
 
@@ -96,14 +96,15 @@ class LoginService
      * Execute the console command.
      *
      * @return bool
+     * @throws Exception
      */
-    public function execute()
+    public function execute(): bool
     {
         $url = $this->getSSOServiceUrl();
         $loginPage = $this->client()->timeout(30)->get($url);
 
         // check if session still active
-        if (Str::startsWith($loginPage->effectiveUri()->__toString(), $this->mmp_main)) {
+        if (Str::startsWith($loginPage->effectiveUri()->__toString(), $this->mmp_main())) {
             $this->saveCookies($loginPage->cookies());
             $this->saveResponse('dashboard.html', $loginPage->body());
 
@@ -128,7 +129,9 @@ class LoginService
             throw new Exception('Login failed. Invalid credentials!');
         }
 
-        if (!$submitLogin->redirect() && $submitLogin->effectiveUri()->getHost() != 'mmp.unej.ac.id') {
+        $redirectHost = parse_url(config('mmp.moodle_baseurl'))['host'] ?? 'mmp.unej.ac.id';
+
+        if (!$submitLogin->redirect() && $submitLogin->effectiveUri()->getHost() != $redirectHost) {
             $this->saveResponse('login-failed.html', $submitLogin->body());
 
             throw new Exception('SSO not redirecting you to MMP. Maybe the MMP is down');
@@ -147,11 +150,12 @@ class LoginService
     /**
      * Re-login.
      *
-     * @param array $creds
+     * @param array|null $creds
      *
      * @return bool
+     * @throws Exception
      */
-    public static function relogin($creds = null)
+    public static function relogin(?array $creds = null): bool
     {
         return (new static())->withCredential($creds ?? config('sister'))->execute();
     }

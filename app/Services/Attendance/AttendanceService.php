@@ -4,6 +4,7 @@ namespace App\Services\Attendance;
 
 use App\Services\CalendarService;
 use Closure;
+use Exception;
 use Illuminate\Support\Collection;
 
 class AttendanceService extends CalendarService
@@ -13,7 +14,7 @@ class AttendanceService extends CalendarService
      *
      * @var Collection
      */
-    private $attendanceList;
+    private Collection $attendanceList;
 
     /**
      * Get attendances from upcoming events.
@@ -33,6 +34,7 @@ class AttendanceService extends CalendarService
      * Retrieve today's attendance.
      *
      * @return Collection
+     * @throws Exception
      */
     public function today(): Collection
     {
@@ -45,6 +47,7 @@ class AttendanceService extends CalendarService
      * Retrieve tommorrow's attendance.
      *
      * @return Collection
+     * @throws Exception
      */
     public function tomorrow(): Collection
     {
@@ -57,6 +60,7 @@ class AttendanceService extends CalendarService
      * Retrieve upcoming attendances.
      *
      * @return Collection
+     * @throws Exception
      */
     public function upcoming(): Collection
     {
@@ -69,6 +73,7 @@ class AttendanceService extends CalendarService
      * Re-order the attendance list with date.
      *
      * @return Collection
+     * @throws Exception
      */
     public function orderByDate(): Collection
     {
@@ -82,8 +87,9 @@ class AttendanceService extends CalendarService
      * @param Closure|null $callback
      *
      * @return array
+     * @throws Exception
      */
-    public function tableRows($callback = null)
+    public function tableRows(?Closure $callback = null)
     {
         $attendances = $this->attendanceList ?? $this->attendances();
 

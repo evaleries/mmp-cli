@@ -21,7 +21,8 @@
         "intonate/tinker-zero": "^1.1",
         "kub-at/php-simple-html-dom-parser": "^1.9",
         "laravel-zero/framework": "^8.0",
-        "nunomaduro/laravel-console-task": "^1.5"
+        "nunomaduro/laravel-console-dusk": "v1.9.0",
+        "ext-json": "*"
     },
     "require-dev": {
         "fzaninotto/faker": "^1.9",
