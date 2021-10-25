@@ -28,7 +28,7 @@ class LoginCommand extends Command
      *
      * @return array
      */
-    protected function tasks()
+    protected function tasks(): array
     {
         return [
             'Login SSO Sister via HTTP Client' => fn () => LoginService::relogin(),
@@ -39,7 +39,7 @@ class LoginCommand extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return void
      */
     public function handle()
     {
@@ -55,17 +55,5 @@ class LoginCommand extends Command
         }
 
         $bar->finish();
-    }
-
-    /**
-     * Define the command's schedule.
-     *
-     * @param \Illuminate\Console\Scheduling\Schedule $schedule
-     *
-     * @return void
-     */
-    public function schedule(Schedule $schedule): void
-    {
-        // $schedule->command(static::class)->everyMinute();
     }
 }

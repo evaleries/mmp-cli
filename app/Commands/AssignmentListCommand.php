@@ -4,6 +4,7 @@ namespace App\Commands;
 
 use App\Services\Assignment\AssignmentService;
 use App\Services\CalendarService;
+use Exception;
 use Illuminate\Console\Scheduling\Schedule;
 use LaravelZero\Framework\Commands\Command;
 
@@ -28,14 +29,14 @@ class AssignmentListCommand extends Command
      *
      * @var CalendarService
      */
-    protected $calendarService;
+    protected CalendarService $calendarService;
 
     /**
      * Assignment Service.
      *
      * @var AssignmentService
      */
-    protected $assignmentService;
+    protected AssignmentService $assignmentService;
 
     public function __construct(CalendarService $calendarService, AssignmentService $assignmentService)
     {
@@ -47,7 +48,8 @@ class AssignmentListCommand extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return void
+     * @throws Exception
      */
     public function handle()
     {
@@ -67,18 +69,5 @@ class AssignmentListCommand extends Command
         }
 
         $this->table(['id', 'topic', 'description', 'due_date', 'when'], $this->assignmentService->tableRows());
-    }
-
-    /**
-     * Get latest update for everyThreeHours()
-     * Define the command's schedule.
-     *
-     * @param \Illuminate\Console\Scheduling\Schedule $schedule
-     *
-     * @return void
-     */
-    public function schedule(Schedule $schedule): void
-    {
-        $schedule->command(static::class, ['--latest'])->everyThreeHours();
     }
 }
