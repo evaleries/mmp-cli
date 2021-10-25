@@ -32,21 +32,21 @@ class AttendanceSubmitCommand extends Command
      *
      * @var Collection
      */
-    protected $attendances;
+    protected Collection $attendances;
 
     /**
      * Submit Attendance Service.
      *
      * @var SubmitAttendanceService
      */
-    protected $submitAttendance;
+    protected SubmitAttendanceService $submitAttendance;
 
     /**
      * Assignment Service.
      *
      * @var AttendanceService
      */
-    protected $attendanceService;
+    protected AttendanceService $attendanceService;
 
     /**
      * @param SubmitAttendanceService $submitAttendance
@@ -69,7 +69,8 @@ class AttendanceSubmitCommand extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return int|void
+     * @throws Exception
      */
     public function handle()
     {
@@ -80,11 +81,13 @@ class AttendanceSubmitCommand extends Command
         )->pluck('instance')->unique();
 
         if ($this->attendances->isEmpty()) {
-            return $this->info('No attendance for today. Add --all to list all attendances');
+            $this->info('No attendance for today. Add --all to list all attendances');
+            return 0;
         }
 
         if ($this->option('course')) {
-            return $this->handleCourse();
+            $this->handleCourse();
+            return 0;
         }
 
         $selectedCourse = $this->choice('ID Matkul', $this->attendances->toArray());
@@ -97,7 +100,8 @@ class AttendanceSubmitCommand extends Command
             $optionKey = array_search($selectedOption, $attendanceOptions);
 
             if (!$optionKey) {
-                return $this->error('Invalid option');
+                $this->error('Invalid option');
+                return -1;
             }
 
             $this->task('Submitting attendance', fn () => $this->submitAttendance->execute($optionKey));
@@ -108,6 +112,7 @@ class AttendanceSubmitCommand extends Command
      * Handle given options | no interactive.
      *
      * @return void
+     * @throws Exception
      */
     protected function handleCourse()
     {

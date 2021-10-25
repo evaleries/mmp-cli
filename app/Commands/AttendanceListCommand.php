@@ -4,6 +4,7 @@ namespace App\Commands;
 
 use App\Services\Attendance\AttendanceService;
 use App\Services\CalendarService;
+use Exception;
 use Illuminate\Console\Scheduling\Schedule;
 use InvalidArgumentException;
 use LaravelZero\Framework\Commands\Command;
@@ -37,14 +38,14 @@ class AttendanceListCommand extends Command
      *
      * @var CalendarService
      */
-    protected $calendarService;
+    protected CalendarService $calendarService;
 
     /**
      * Assignment Service.
      *
      * @var AttendanceService
      */
-    protected $attendanceService;
+    protected AttendanceService $attendanceService;
 
     /**
      * @param CalendarService   $calendarService
@@ -66,7 +67,8 @@ class AttendanceListCommand extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return void
+     * @throws Exception
      */
     public function handle()
     {
@@ -86,6 +88,9 @@ class AttendanceListCommand extends Command
         $this->table(['#', 'id', 'topic', 'when', 'schedule', 'duration'], $this->attendanceService->tableRows());
     }
 
+    /**
+     * @throws Exception
+     */
     protected function handleOptions()
     {
         if ($this->option('latest')) {
@@ -107,17 +112,5 @@ class AttendanceListCommand extends Command
         if ($this->option('desc')) {
             $this->attendanceService->orderByDate();
         }
-    }
-
-    /**
-     * Define the command's schedule.
-     *
-     * @param \Illuminate\Console\Scheduling\Schedule $schedule
-     *
-     * @return void
-     */
-    public function schedule(Schedule $schedule): void
-    {
-        // $schedule->command(static::class)->everyMinute();
     }
 }

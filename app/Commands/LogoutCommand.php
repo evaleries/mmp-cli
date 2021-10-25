@@ -26,12 +26,13 @@ class LogoutCommand extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return int
      */
     public function handle()
     {
         if (!$this->confirm('This command will delete the storage\'s contents? Continue', false)) {
-            return $this->info('Logout cancelled');
+            $this->info('Logout cancelled');
+            return 0;
         }
 
         $directories = ['cookies', 'responses'];
@@ -46,17 +47,6 @@ class LogoutCommand extends Command
         }
 
         $this->line('Logout completed');
-    }
-
-    /**
-     * Define the command's schedule.
-     *
-     * @param \Illuminate\Console\Scheduling\Schedule $schedule
-     *
-     * @return void
-     */
-    public function schedule(Schedule $schedule): void
-    {
-        // $schedule->command(static::class)->everyMinute();
+        return 0;
     }
 }

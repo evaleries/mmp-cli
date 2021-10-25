@@ -3,6 +3,7 @@
 namespace App\Commands;
 
 use App\Services\Assignment\AssignmentService;
+use Exception;
 use Illuminate\Console\Scheduling\Schedule;
 use LaravelZero\Framework\Commands\Command;
 
@@ -25,7 +26,8 @@ class AssignmentDetailCommand extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return int|void
+     * @throws Exception
      */
     public function handle(AssignmentService $assignmentService)
     {
@@ -36,7 +38,8 @@ class AssignmentDetailCommand extends Command
         $matkul = $assignments->firstWhere('id', '=', $selectedCourse);
 
         if (!$matkul) {
-            return $this->error('Invalid Options');
+            $this->error('Invalid Options');
+            return -1;
         }
 
         $due = $assignmentService->formatTimestamp($matkul->get('timestart'));
@@ -45,17 +48,5 @@ class AssignmentDetailCommand extends Command
         $this->line("Due Date:\t".$due->format('D F Y H:i A'));
         $this->line("When:\t\t".$due->diffForHumans());
         $this->line("Description: \n".strip_tags($matkul->get('description')));
-    }
-
-    /**
-     * Define the command's schedule.
-     *
-     * @param \Illuminate\Console\Scheduling\Schedule $schedule
-     *
-     * @return void
-     */
-    public function schedule(Schedule $schedule): void
-    {
-        // $schedule->command(static::class)->everyMinute();
     }
 }
