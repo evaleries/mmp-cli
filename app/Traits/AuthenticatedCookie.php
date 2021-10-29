@@ -17,6 +17,7 @@ trait AuthenticatedCookie
     protected string $sso;
     protected string $mmp;
     protected string $mmp_main;
+    protected string $responseDashboard = 'responses/dashboard.html';
 
     /**
      * Retrieved sesskey.
@@ -141,7 +142,7 @@ trait AuthenticatedCookie
      */
     public function getSesskey($response = null)
     {
-        $response ??= (Storage::has('responses/dashboard.html') ? Storage::get('responses/dashboard.html') : '');
+        $response ??= (Storage::has($this->responseDashboard) ? Storage::get($this->responseDashboard) : '');
 
         preg_match_all('/"sesskey":"(.*?)"/si', $response, $tokens);
 
